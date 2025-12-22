@@ -1,6 +1,6 @@
 {
   "api.d.mts": {
-    "summary": "declare function summary(_: string, _: string, _: (_: string, _: string) => boolean): Record<string, string>",
+    "summary": "declare function summary(_: string, _: string): Record<string, string>",
     "#exports": [
       "summary"
     ]

@@ -12,7 +12,8 @@ test('basic', () => {
       }
       export function format(
         filePath: string,
-        code: string, options?: Options): string;`,
+        code: string, options?: Options): string;
+      export { format as "module.exports" }`,
     ),
   ).toMatchInlineSnapshot(`
     {
@@ -21,6 +22,7 @@ test('basic', () => {
      str: 'hello'
     }",
       "format": "function format(_: string, _: string, _: Options): string",
+      "module.exports": "function format(_: string, _: string, _: Options): string",
     }
   `)
 })

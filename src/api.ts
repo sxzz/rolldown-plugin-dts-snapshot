@@ -2,7 +2,7 @@ import dprint from 'dprint-node'
 import { walk } from 'estree-walker'
 import MagicString from 'magic-string'
 import { parseSync } from 'rolldown/experimental'
-import type { Node, Span } from '@oxc-project/types'
+import type { Node, Span, TSTypeAnnotation } from '@oxc-project/types'
 
 const multilineCommentsRE = /\/\*.*?\*\//gs
 const singlelineCommentsRE = /\/\/.*$/gm
@@ -10,7 +10,6 @@ const singlelineCommentsRE = /\/\/.*$/gm
 export function summary(
   code: string,
   fileName: string = 'dummy.d.ts',
-  filter?: (symbol: string, summary: string) => boolean,
 ): Record<string, string> {
   code = code
     .replaceAll(multilineCommentsRE, '')
@@ -44,18 +43,29 @@ export function summary(
     }
 
     const register = (symbol: string, node: Node) => {
-      const summary = format(slice(node))
-      if (!filter || filter(symbol, summary)) {
-        result[symbol] = summary
+      let code: string | undefined
+      if (node.type === 'VariableDeclarator') {
+        const typeAnnotation = (
+          node.id.typeAnnotation as TSTypeAnnotation | null | undefined
+        )?.typeAnnotation
+        if (typeAnnotation) {
+          code = s.slice(typeAnnotation.start, node.end)
+        } else if (node.init) {
+          code = slice(node.init)
+        }
       }
+      code ||= slice(node)
+
+      const summary = format(code)
+      result[symbol] = summary
     }
 
     if (decl.type === 'VariableDeclaration') {
       for (const node of decl.declarations) {
-        register(slice(node.id), node)
+        register(nodeToString(node.id), node)
       }
     } else if ('id' in decl && decl.id) {
-      register(slice(decl.id), decl)
+      register(nodeToString(decl.id), decl)
     } else if (
       // default export
       decl.type === 'ExportDefaultDeclaration' &&
@@ -66,7 +76,31 @@ export function summary(
     }
   }
 
+  for (const stmt of program.body) {
+    if (
+      stmt.type === 'ExportNamedDeclaration' &&
+      stmt.declaration === null &&
+      stmt.specifiers.length
+    ) {
+      for (const specifier of stmt.specifiers) {
+        const exported = nodeToString(specifier.exported)
+        const local = nodeToString(specifier.local)
+        if (local !== exported) {
+          result[exported] = result[local]
+        }
+      }
+    }
+  }
+
   return result
+
+  function nodeToString(node: Node) {
+    return node.type === 'Identifier'
+      ? node.name
+      : node.type === 'Literal'
+        ? (node.value as string)
+        : slice(node)
+  }
 }
 
 function format(code: string) {

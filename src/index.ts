@@ -12,11 +12,11 @@ export interface Options {
   include?: FilterPattern
   exclude?: FilterPattern
   /**
-   * @default false
+   * @default true
    */
   excludeNonExport?: boolean
   /**
-   * @default 'dts-summary.json'
+   * @default '[cwd]/dts-summary.json'
    */
   saveTo?: string
 }
@@ -25,36 +25,43 @@ export function DtsSummary(options: Options = {}): Plugin {
   const {
     include = RE_DTS,
     exclude,
-    excludeNonExport,
+    excludeNonExport = true,
     saveTo = 'dts-summary.json',
   } = options
   const filter = createFilter(include, exclude)
 
   return {
     name: 'rolldown-plugin-dts-summary',
-    async generateBundle(_, bundle) {
-      const result: Record<
-        string,
-        Record<string, string | string[]>
-      > = Object.create(null)
+    generateBundle: {
+      order: 'post',
+      async handler(_, bundle) {
+        const result: Record<
+          string,
+          Record<string, string | string[]>
+        > = Object.create(null)
 
-      for (const chunk of Object.values(bundle)) {
-        if (chunk.type === 'asset' || !filter(chunk.fileName)) continue
+        for (const chunk of Object.values(bundle)) {
+          if (chunk.type === 'asset' || !filter(chunk.fileName)) continue
 
-        result[chunk.fileName] = summary(
-          chunk.code,
-          chunk.fileName,
-          chunk.isEntry && excludeNonExport
-            ? (symbol) => chunk.exports.includes(symbol)
-            : undefined,
-        )
-        if (chunk.isEntry) {
-          result[chunk.fileName]['#exports'] = chunk.exports
+          const map: Record<string, string | string[]> = (result[
+            chunk.fileName
+          ] = summary(chunk.code, chunk.fileName))
+
+          if (chunk.isEntry) {
+            if (excludeNonExport) {
+              for (const key of Object.keys(map)) {
+                if (key !== '#exports' && !chunk.exports.includes(key)) {
+                  delete map[key]
+                }
+              }
+            }
+            map['#exports'] = chunk.exports
+          }
         }
-      }
 
-      const code = `${JSON.stringify(result, null, 2)}\n`
-      await writeFile(saveTo, code)
+        const code = `${JSON.stringify(result, null, 2)}\n`
+        await writeFile(saveTo, code)
+      },
     },
   }
 }
