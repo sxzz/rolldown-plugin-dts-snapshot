@@ -40,6 +40,26 @@ export default defineConfig({
 })
 ```
 
+## Options
+
+```ts
+export interface Options {
+  /**
+   * @default /\.d\.[cm]?ts$/
+   */
+  include?: FilterPattern
+  exclude?: FilterPattern
+  /**
+   * @default false
+   */
+  includeNonExport?: boolean
+  /**
+   * @default '[cwd]/dts.snapshot.json'
+   */
+  saveTo?: string
+}
+```
+
 ## Sponsors
 
 <p align="center">

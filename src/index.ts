@@ -12,9 +12,9 @@ export interface Options {
   include?: FilterPattern
   exclude?: FilterPattern
   /**
-   * @default true
+   * @default false
    */
-  excludeNonExport?: boolean
+  includeNonExport?: boolean
   /**
    * @default '[cwd]/dts.snapshot.json'
    */
@@ -24,7 +24,7 @@ export interface Options {
 export function DtsSnapshot({
   include = RE_DTS,
   exclude,
-  excludeNonExport = true,
+  includeNonExport = true,
   saveTo = 'dts.snapshot.json',
 }: Options = {}): Plugin {
   const filter = createFilter(include, exclude)
@@ -49,7 +49,7 @@ export function DtsSnapshot({
           }))
 
           if (chunk.isEntry) {
-            if (excludeNonExport) {
+            if (!includeNonExport) {
               for (const key of Object.keys(map)) {
                 if (key !== '#exports' && !chunk.exports.includes(key)) {
                   delete map[key]
