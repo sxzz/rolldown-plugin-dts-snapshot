@@ -72,10 +72,17 @@ export function summary(
 function format(code: string) {
   return dprint
     .format('dummy.d.ts', code, {
+      lineWidth: 100000000,
+      indentWidth: 1,
       semiColons: 'asi',
-      singleBodyPosition: 'sameLine',
       preferSingleLine: true,
       'arrowFunction.useParentheses': 'force',
+      quoteStyle: 'alwaysSingle',
+
+      singleBodyPosition: 'sameLine',
+      bracePosition: 'sameLine',
+      operatorPosition: 'sameLine',
+      preferHanging: true,
     })
     .trim()
     .replaceAll('\n\n', '\n')

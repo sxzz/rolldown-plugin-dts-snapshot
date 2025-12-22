@@ -8,13 +8,17 @@ test('basic', () => {
       interface Options {
         /** @default 10 */
         include?: any;
+        str: "hello"
       }
-      export function format(filePath: string, code: string, options?: Options): string;`,
+      export function format(
+        filePath: string,
+        code: string, options?: Options): string;`,
     ),
   ).toMatchInlineSnapshot(`
     {
       "Options": "interface Options {
-      include?: any
+     include?: any
+     str: 'hello'
     }",
       "format": "function format(_: string, _: string, _: Options): string",
     }
