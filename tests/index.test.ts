@@ -1,9 +1,9 @@
 import { expect, test } from 'vitest'
-import { summary } from '../src/api.ts'
+import { snapshot } from '../src/api.ts'
 
 test('basic', () => {
   expect(
-    summary(
+    snapshot(
       `
       interface Options {
         /** @default 10 */

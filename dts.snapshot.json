@@ -1,15 +1,15 @@
 {
   "api.d.mts": {
-    "summary": "declare function summary(_: string, _: string): Record<string, string>",
+    "snapshot": "declare function snapshot(_: string, _: string): Record<string, string>",
     "#exports": [
-      "summary"
+      "snapshot"
     ]
   },
   "index.d.mts": {
     "Options": "interface Options {\n include?: FilterPattern\n exclude?: FilterPattern\n excludeNonExport?: boolean\n saveTo?: string\n}",
-    "DtsSummary": "declare function DtsSummary(_: Options): Plugin",
+    "DtsSnapshot": "declare function DtsSnapshot(_: Options): Plugin",
     "#exports": [
-      "DtsSummary",
+      "DtsSnapshot",
       "Options"
     ]
   }

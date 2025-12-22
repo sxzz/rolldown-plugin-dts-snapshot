@@ -7,7 +7,7 @@ import type { Node, Span, TSTypeAnnotation } from '@oxc-project/types'
 const multilineCommentsRE = /\/\*.*?\*\//gs
 const singlelineCommentsRE = /\/\/.*$/gm
 
-export function summary(
+export function snapshot(
   code: string,
   fileName: string = 'dummy.d.ts',
 ): Record<string, string> {
@@ -56,8 +56,8 @@ export function summary(
       }
       code ||= slice(node)
 
-      const summary = format(code)
-      result[symbol] = summary
+      const snapshot = format(code)
+      result[symbol] = snapshot
     }
 
     if (decl.type === 'VariableDeclaration') {
