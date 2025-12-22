@@ -21,13 +21,12 @@ export interface Options {
   saveTo?: string
 }
 
-export function DtsSnapshot(options: Options = {}): Plugin {
-  const {
-    include = RE_DTS,
-    exclude,
-    excludeNonExport = true,
-    saveTo = 'dts.snapshot.json',
-  } = options
+export function DtsSnapshot({
+  include = RE_DTS,
+  exclude,
+  excludeNonExport = true,
+  saveTo = 'dts.snapshot.json',
+}: Options = {}): Plugin {
   const filter = createFilter(include, exclude)
 
   return {

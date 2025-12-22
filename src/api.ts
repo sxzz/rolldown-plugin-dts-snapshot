@@ -21,7 +21,12 @@ export function snapshot(
 
   ;(walk as any)(program, {
     enter(node: Node, parent: Node, key: string) {
-      if (key === 'params' && node.type === 'Identifier') {
+      if (
+        key === 'params' &&
+        (node.type === 'Identifier' ||
+          node.type === 'ObjectPattern' ||
+          node.type === 'ArrayPattern')
+      ) {
         const end = node.typeAnnotation?.start ?? node.end
         s.overwrite(node.start, end, '_')
       }
