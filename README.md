@@ -12,6 +12,19 @@ DTS snapshot plugin for Rolldown
 npm i rolldown-plugin-dts-snapshot
 ```
 
+## Usage
+
+```ts
+import { defineConfig } from 'rolldown'
+import { dts } from 'rolldown-plugin-dts'
+import { DtsSnapshot } from 'rolldown-plugin-dts-snapshot'
+
+export default defineConfig({
+  input: 'src/index.ts',
+  plugins: [dts(), DtsSnapshot()],
+})
+```
+
 ## Sponsors
 
 <p align="center">
