@@ -14,6 +14,21 @@ npm i rolldown-plugin-dts-snapshot
 
 ## Usage
 
+### tsdown
+
+```ts
+import { DtsSnapshot } from 'rolldown-plugin-dts-snapshot'
+import { defineConfig } from 'tsdown'
+
+export default defineConfig({
+  entry: 'src/index.ts',
+  dts: true,
+  plugins: [DtsSnapshot()],
+})
+```
+
+### Rolldown
+
 ```ts
 import { defineConfig } from 'rolldown'
 import { dts } from 'rolldown-plugin-dts'
