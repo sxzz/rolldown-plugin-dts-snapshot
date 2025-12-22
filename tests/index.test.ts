@@ -13,6 +13,8 @@ test('basic', () => {
       export function format(
         filePath: string,
         code: string, options?: Options): string;
+      const foo = 42;
+      const bar: typeof foo
       export { format as "module.exports" }`,
     ),
   ).toMatchInlineSnapshot(`
@@ -21,6 +23,8 @@ test('basic', () => {
      include?: any
      str: 'hello'
     }",
+      "bar": "typeof foo",
+      "foo": "42",
       "format": "function format(_: string, _: string, _: Options): string",
       "module.exports": "function format(_: string, _: string, _: Options): string",
     }
