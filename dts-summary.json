@@ -1,0 +1,16 @@
+{
+  "api.d.mts": {
+    "summary": "declare function summary(\n  _: string,\n  _: string,\n  _: (_: string, _: string) => boolean,\n): Record<string, string>",
+    "#exports": [
+      "summary"
+    ]
+  },
+  "index.d.mts": {
+    "Options": "interface Options {\n  include?: FilterPattern\n  exclude?: FilterPattern\n  excludeNonExport?: boolean\n  saveTo?: string\n}",
+    "DtsSummary": "declare function DtsSummary(_: Options): Plugin",
+    "#exports": [
+      "DtsSummary",
+      "Options"
+    ]
+  }
+}
