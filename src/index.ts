@@ -43,8 +43,10 @@ export function DtsSnapshot({
           if (chunk.type === 'asset' || !filter(chunk.fileName)) continue
 
           const map: Record<string, string | string[]> = (result[
-            chunk.fileName
-          ] = snapshot(chunk.code, chunk.fileName))
+            chunk.preliminaryFileName
+          ] = snapshot(chunk.code, chunk.fileName, {
+            applyExportRename: chunk.isEntry,
+          }))
 
           if (chunk.isEntry) {
             if (excludeNonExport) {
@@ -54,6 +56,7 @@ export function DtsSnapshot({
                 }
               }
             }
+
             map['#exports'] = chunk.exports
           }
         }

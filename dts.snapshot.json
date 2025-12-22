@@ -1,6 +1,6 @@
 {
   "api.d.mts": {
-    "snapshot": "declare function snapshot(_: string, _: string): Record<string, string>",
+    "snapshot": "declare function snapshot(_: string, _: string, _: { applyExportRename?: boolean }): Record<string, string>",
     "#exports": [
       "snapshot"
     ]

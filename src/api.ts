@@ -10,6 +10,7 @@ const singlelineCommentsRE = /\/\/.*$/gm
 export function snapshot(
   code: string,
   fileName: string = 'dummy.d.ts',
+  { applyExportRename = true }: { applyExportRename?: boolean } = {},
 ): Record<string, string> {
   code = code
     .replaceAll(multilineCommentsRE, '')
@@ -81,21 +82,22 @@ export function snapshot(
     }
   }
 
-  for (const stmt of program.body) {
-    if (
-      stmt.type === 'ExportNamedDeclaration' &&
-      stmt.declaration === null &&
-      stmt.specifiers.length
-    ) {
-      for (const specifier of stmt.specifiers) {
-        const exported = nodeToString(specifier.exported)
-        const local = nodeToString(specifier.local)
-        if (local !== exported) {
-          result[exported] = result[local]
+  if (applyExportRename)
+    for (const stmt of program.body) {
+      if (
+        stmt.type === 'ExportNamedDeclaration' &&
+        stmt.declaration === null &&
+        stmt.specifiers.length
+      ) {
+        for (const specifier of stmt.specifiers) {
+          const exported = nodeToString(specifier.exported)
+          const local = nodeToString(specifier.local)
+          if (local !== exported) {
+            result[exported] = result[local]
+          }
         }
       }
     }
-  }
 
   return result
 
