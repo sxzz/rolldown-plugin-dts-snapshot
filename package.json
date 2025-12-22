@@ -48,7 +48,6 @@
   },
   "dependencies": {
     "dprint-node": "^1.0.8",
-    "estree-walker": "^3.0.3",
     "magic-string": "^0.30.21",
     "unplugin-utils": "^0.3.1"
   },
@@ -60,6 +59,7 @@
     "@typescript/native-preview": "7.0.0-dev.20251222.1",
     "bumpp": "^10.3.2",
     "eslint": "^9.39.2",
+    "estree-walker": "^3.0.3",
     "prettier": "^3.7.4",
     "rolldown": "^1.0.0-beta.56",
     "tsdown": "^0.18.2",

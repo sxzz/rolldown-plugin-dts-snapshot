@@ -5,6 +5,6 @@ export default defineConfig({
   entry: ['src/*.ts'],
   platform: 'node',
   exports: true,
-  inlineOnly: [],
+  inlineOnly: ['estree-walker'],
   plugins: [DtsSnapshot()],
 })

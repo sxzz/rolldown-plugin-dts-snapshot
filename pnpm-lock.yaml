@@ -11,9 +11,6 @@ importers:
       dprint-node:
         specifier: ^1.0.8
         version: 1.0.8
-      estree-walker:
-        specifier: ^3.0.3
-        version: 3.0.3
       magic-string:
         specifier: ^0.30.21
         version: 0.30.21
@@ -42,6 +39,9 @@ importers:
       eslint:
         specifier: ^9.39.2
         version: 9.39.2(jiti@2.6.1)
+      estree-walker:
+        specifier: ^3.0.3
+        version: 3.0.3
       prettier:
         specifier: ^3.7.4
         version: 3.7.4
