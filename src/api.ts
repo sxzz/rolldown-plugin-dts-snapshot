@@ -1,4 +1,6 @@
-import dprint from 'dprint-node'
+import { readFile } from 'node:fs/promises'
+import { createFromBuffer, type GlobalConfiguration } from '@dprint/formatter'
+import { getPath } from '@dprint/typescript'
 import { walk } from 'estree-walker'
 import MagicString from 'magic-string'
 import { parseSync } from 'rolldown/experimental'
@@ -110,20 +112,28 @@ export function snapshot(
   }
 }
 
-function format(code: string) {
-  return dprint
-    .format('dummy.d.ts', code, {
-      lineWidth: 100000000,
-      indentWidth: 1,
-      semiColons: 'asi',
-      preferSingleLine: true,
-      'arrowFunction.useParentheses': 'force',
-      quoteStyle: 'alwaysSingle',
+const globalConfig: GlobalConfiguration = {
+  indentWidth: 1,
+  lineWidth: 100000000,
+}
+const tsFormatter = createFromBuffer(await readFile(getPath()))
+tsFormatter.setConfig(globalConfig, {
+  semiColons: 'asi',
+  preferSingleLine: true,
+  'arrowFunction.useParentheses': 'force',
+  quoteStyle: 'alwaysSingle',
 
-      singleBodyPosition: 'sameLine',
-      bracePosition: 'sameLine',
-      operatorPosition: 'sameLine',
-      preferHanging: true,
+  singleBodyPosition: 'sameLine',
+  bracePosition: 'sameLine',
+  operatorPosition: 'sameLine',
+  preferHanging: true,
+})
+
+function format(code: string) {
+  return tsFormatter
+    .formatText({
+      filePath: 'dummy.d.ts',
+      fileText: code,
     })
     .trim()
     .replaceAll('\n\n', '\n')

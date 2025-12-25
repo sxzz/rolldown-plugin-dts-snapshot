@@ -47,7 +47,8 @@
     "rolldown": "^1.0.0-beta.56"
   },
   "dependencies": {
-    "dprint-node": "^1.0.8",
+    "@dprint/formatter": "^0.4.1",
+    "@dprint/typescript": "^0.95.13",
     "magic-string": "^0.30.21",
     "unplugin-utils": "^0.3.1"
   },
