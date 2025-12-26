@@ -6,8 +6,8 @@
     ]
   },
   "index.d.mts": {
-    "Options": "interface Options {\n include?: FilterPattern\n exclude?: FilterPattern\n includeNonExport?: boolean\n saveTo?: string\n}",
     "DtsSnapshot": "declare function DtsSnapshot(_: Options): Plugin",
+    "Options": "interface Options {\n include?: FilterPattern\n exclude?: FilterPattern\n includeNonExport?: boolean\n saveTo?: string\n}",
     "#exports": [
       "DtsSnapshot",
       "Options"

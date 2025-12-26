@@ -1,6 +1,7 @@
 import { writeFile } from 'node:fs/promises'
 import { createFilter, type FilterPattern } from 'unplugin-utils'
 import { snapshot } from './api.ts'
+import { sortObjectKeys } from './utils.ts'
 import type { Plugin } from 'rolldown'
 
 const RE_DTS = /\.d\.[cm]?ts$/
@@ -61,7 +62,7 @@ export function DtsSnapshot({
           }
         }
 
-        const code = `${JSON.stringify(result, null, 2)}\n`
+        const code = `${JSON.stringify(sortObjectKeys(result), null, 2)}\n`
         await writeFile(saveTo, code)
       },
     },

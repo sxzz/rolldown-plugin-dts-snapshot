@@ -4,6 +4,7 @@ import { getPath } from '@dprint/typescript'
 import { walk } from 'estree-walker'
 import MagicString from 'magic-string'
 import { parseSync } from 'rolldown/experimental'
+import { sortObjectKeys } from './utils.ts'
 import type { Node, Span, TSTypeAnnotation } from '@oxc-project/types'
 
 const multilineCommentsRE = /\/\*.*?\*\//gs
@@ -101,7 +102,7 @@ export function snapshot(
       }
     }
 
-  return result
+  return sortObjectKeys(result)
 
   function nodeToString(node: Node) {
     return node.type === 'Identifier'
