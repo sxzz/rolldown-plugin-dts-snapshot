@@ -44,7 +44,7 @@ export function DtsSnapshot({
 
           const map: Record<string, string | string[]> = (result[
             chunk.preliminaryFileName
-          ] = snapshot(chunk.code, chunk.fileName, {
+          ] = await snapshot(chunk.code, chunk.fileName, {
             applyExportRename: chunk.isEntry,
           }))
 

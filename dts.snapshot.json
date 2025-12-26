@@ -1,13 +1,13 @@
 {
   "api.d.mts": {
-    "snapshot": "declare function snapshot(_: string, _: string, _: { applyExportRename?: boolean }): Record<string, string>",
+    "snapshot": "declare function snapshot(_: string, _: string, _: {\n  applyExportRename?: boolean;\n}): Promise<Record<string, string>>;",
     "#exports": [
       "snapshot"
     ]
   },
   "index.d.mts": {
-    "Options": "interface Options {\n include?: FilterPattern\n exclude?: FilterPattern\n includeNonExport?: boolean\n saveTo?: string\n}",
-    "DtsSnapshot": "declare function DtsSnapshot(_: Options): Plugin",
+    "Options": "interface Options {\n  \n  include?: FilterPattern;\n  exclude?: FilterPattern;\n  \n  includeNonExport?: boolean;\n  \n  saveTo?: string;\n}",
+    "DtsSnapshot": "declare function DtsSnapshot(_: Options): Plugin;",
     "#exports": [
       "DtsSnapshot",
       "Options"

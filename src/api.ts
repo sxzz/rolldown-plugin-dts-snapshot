@@ -1,19 +1,17 @@
-import { readFile } from 'node:fs/promises'
-import { createFromBuffer, type GlobalConfiguration } from '@dprint/formatter'
-import { getPath } from '@dprint/typescript'
 import { walk } from 'estree-walker'
 import MagicString from 'magic-string'
+import { format as oxfmt } from 'oxfmt'
 import { parseSync } from 'rolldown/experimental'
 import type { Node, Span, TSTypeAnnotation } from '@oxc-project/types'
 
 const multilineCommentsRE = /\/\*.*?\*\//gs
 const singlelineCommentsRE = /\/\/.*$/gm
 
-export function snapshot(
+export async function snapshot(
   code: string,
   fileName: string = 'dummy.d.ts',
   { applyExportRename = true }: { applyExportRename?: boolean } = {},
-): Record<string, string> {
+): Promise<Record<string, string>> {
   code = code
     .replaceAll(multilineCommentsRE, '')
     .replaceAll(singlelineCommentsRE, '')
@@ -50,7 +48,7 @@ export function snapshot(
       decl = stmt
     }
 
-    const register = (symbol: string, node: Node) => {
+    const register = async (symbol: string, node: Node) => {
       let code: string | undefined
       if (node.type === 'VariableDeclarator') {
         const typeAnnotation = (
@@ -64,23 +62,23 @@ export function snapshot(
       }
       code ||= slice(node)
 
-      const snapshot = format(code)
+      const snapshot = await format(code)
       result[symbol] = snapshot
     }
 
     if (decl.type === 'VariableDeclaration') {
       for (const node of decl.declarations) {
-        register(nodeToString(node.id), node)
+        await register(nodeToString(node.id), node)
       }
     } else if ('id' in decl && decl.id) {
-      register(nodeToString(decl.id), decl)
+      await register(nodeToString(decl.id), decl)
     } else if (
       // default export
       decl.type === 'ExportDefaultDeclaration' &&
       'id' in decl.declaration &&
       decl.declaration.id
     ) {
-      register('default', decl.declaration)
+      await register('default', decl.declaration)
     }
   }
 
@@ -112,29 +110,18 @@ export function snapshot(
   }
 }
 
-const globalConfig: GlobalConfiguration = {
-  indentWidth: 1,
-  lineWidth: 100000000,
-}
-const tsFormatter = createFromBuffer(await readFile(getPath()))
-tsFormatter.setConfig(globalConfig, {
-  semiColons: 'asi',
-  preferSingleLine: true,
-  'arrowFunction.useParentheses': 'force',
-  quoteStyle: 'alwaysSingle',
-
-  singleBodyPosition: 'sameLine',
-  bracePosition: 'sameLine',
-  operatorPosition: 'sameLine',
-  preferHanging: true,
-})
-
-function format(code: string) {
-  return tsFormatter
-    .formatText({
-      filePath: 'dummy.d.ts',
-      fileText: code,
+async function format(code: string) {
+  return (
+    await oxfmt('dummy.d.ts', code, {
+      semi: false,
+      tabWidth: 1,
+      printWidth: 100000000,
+      singleQuote: true,
+      objectWrap: 'collapse',
+      experimentalSortPackageJson: false,
+      bracketSameLine: true,
     })
+  ).code
     .trim()
     .replaceAll('\n\n', '\n')
 }

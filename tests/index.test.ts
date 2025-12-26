@@ -1,9 +1,9 @@
 import { expect, test } from 'vitest'
 import { snapshot } from '../src/api.ts'
 
-test('basic', () => {
+test('basic', async () => {
   expect(
-    snapshot(
+    await snapshot(
       `
       interface Options {
         /** @default 10 */
@@ -20,13 +20,18 @@ test('basic', () => {
   ).toMatchInlineSnapshot(`
     {
       "Options": "interface Options {
-     include?: any
-     str: 'hello'
-    }",
+            
+            include?: any;
+            str: "hello"
+          }",
       "bar": "typeof foo",
       "foo": "42",
-      "format": "function format(_: string, _: string, _: Options): string",
-      "module.exports": "function format(_: string, _: string, _: Options): string",
+      "format": "function format(
+            _: string,
+            _: string, _: Options): string;",
+      "module.exports": "function format(
+            _: string,
+            _: string, _: Options): string;",
     }
   `)
 })
