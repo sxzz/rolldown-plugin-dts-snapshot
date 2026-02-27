@@ -50,7 +50,7 @@ export interface Options {
   include?: FilterPattern
   exclude?: FilterPattern
   /**
-   * @default false
+   * @default true
    */
   includeNonExport?: boolean
   /**

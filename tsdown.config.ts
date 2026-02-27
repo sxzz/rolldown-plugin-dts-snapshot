@@ -1,10 +1,7 @@
-import { defineConfig } from 'tsdown'
+import { nodeLib } from 'tsdown-preset-sxzz'
 import { DtsSnapshot } from './src/index.ts'
 
-export default defineConfig({
-  entry: ['src/index.ts', 'src/api.ts'],
-  platform: 'node',
-  exports: true,
-  inlineOnly: ['estree-walker'],
-  plugins: [DtsSnapshot()],
-})
+export default nodeLib(
+  { entry: ['src/{index,api}.ts'] },
+  { plugins: [DtsSnapshot()] },
+)

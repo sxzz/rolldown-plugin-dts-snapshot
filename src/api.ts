@@ -1,20 +1,24 @@
 import { readFile } from 'node:fs/promises'
-import { createFromBuffer, type GlobalConfiguration } from '@dprint/formatter'
+import {
+  createFromBuffer,
+  type Formatter,
+  type GlobalConfiguration,
+} from '@dprint/formatter'
 import { getPath } from '@dprint/typescript'
 import { walk } from 'estree-walker'
 import MagicString from 'magic-string'
-import { parseSync } from 'rolldown/experimental'
+import { parseSync } from 'rolldown/utils'
 import { sortObjectKeys } from './utils.ts'
 import type { Node, Span, TSTypeAnnotation } from '@oxc-project/types'
 
 const multilineCommentsRE = /\/\*.*?\*\//gs
 const singlelineCommentsRE = /\/\/.*$/gm
 
-export function snapshot(
+export async function snapshot(
   code: string,
   fileName: string = 'dummy.d.ts',
   { applyExportRename = true }: { applyExportRename?: boolean } = {},
-): Record<string, string> {
+): Promise<Record<string, string>> {
   code = code
     .replaceAll(multilineCommentsRE, '')
     .replaceAll(singlelineCommentsRE, '')
@@ -38,6 +42,10 @@ export function snapshot(
   })
 
   const result: Record<string, string> = Object.create(null)
+
+  if (!tsFormatter) {
+    await initFormatter()
+  }
 
   for (const stmt of program.body) {
     let decl: Node
@@ -112,23 +120,25 @@ export function snapshot(
         : slice(node)
   }
 }
+let tsFormatter: Formatter
+async function initFormatter() {
+  const globalConfig: GlobalConfiguration = {
+    indentWidth: 1,
+    lineWidth: 100000000,
+  }
+  tsFormatter = createFromBuffer(await readFile(getPath()))
+  tsFormatter.setConfig(globalConfig, {
+    semiColons: 'asi',
+    preferSingleLine: true,
+    'arrowFunction.useParentheses': 'force',
+    quoteStyle: 'alwaysSingle',
 
-const globalConfig: GlobalConfiguration = {
-  indentWidth: 1,
-  lineWidth: 100000000,
+    singleBodyPosition: 'sameLine',
+    bracePosition: 'sameLine',
+    operatorPosition: 'sameLine',
+    preferHanging: true,
+  })
 }
-const tsFormatter = createFromBuffer(await readFile(getPath()))
-tsFormatter.setConfig(globalConfig, {
-  semiColons: 'asi',
-  preferSingleLine: true,
-  'arrowFunction.useParentheses': 'force',
-  quoteStyle: 'alwaysSingle',
-
-  singleBodyPosition: 'sameLine',
-  bracePosition: 'sameLine',
-  operatorPosition: 'sameLine',
-  preferHanging: true,
-})
 
 function format(code: string) {
   return tsFormatter
