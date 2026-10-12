@@ -44,14 +44,14 @@
     "rolldown": "^1.0.0-rc.2"
   },
   "dependencies": {
-    "@dprint/formatter": "^0.5.1",
+    "@dprint/formatter": "^0.6.0",
     "@dprint/typescript": "^0.96.0",
     "estree-walker": "^3.0.3",
     "magic-string": "^0.30.21",
     "unplugin-utils": "^0.3.1"
   },
   "devDependencies": {
-    "@oxc-project/types": "^0.152.0",
+    "@oxc-project/types": "^0.153.0",
     "@sxzz/eslint-config": "^7.8.2",
     "@sxzz/prettier-config": "^2.3.1",
     "@types/node": "^25.3.2",
