@@ -2,7 +2,7 @@
   "name": "rolldown-plugin-dts-snapshot",
   "type": "module",
   "version": "0.4.0",
-  "packageManager": "pnpm@12.15.0",
+  "packageManager": "pnpm@12.16.1",
   "description": "DTS snapshot plugin for Rolldown",
   "author": "Kevin Deng <sxzz@sxzz.moe>",
   "license": "MIT",
@@ -51,7 +51,7 @@
     "unplugin-utils": "^0.3.1"
   },
   "devDependencies": {
-    "@oxc-project/types": "^0.155.0",
+    "@oxc-project/types": "^0.156.0",
     "@sxzz/eslint-config": "^7.8.2",
     "@sxzz/prettier-config": "^2.3.1",
     "@types/node": "^25.3.2",
